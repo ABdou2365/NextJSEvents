@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }) {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Component {...pageProps} />
-      <Notification title="test" message="this is a test" status="pending" />
     </Layout>
     </NotificationContextProvider>
   );

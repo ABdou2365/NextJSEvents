@@ -1,10 +1,18 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import classes from './newsletter-registration.module.css';
+import NotificationContext from '../../store/notification-context';
 
 function NewsletterRegistration() {
+  const notificationCts = useContext(NotificationContext);
   const emailInput = useRef();
   function registrationHandler(event) {
     event.preventDefault();
+
+    notificationCts.showNotification({
+      title: 'Signin up',
+      message: 'Regestering for newsletter...',
+      status : 'pending'
+    })
 
     const entredEmail = emailInput.current.value
 
@@ -18,8 +26,26 @@ function NewsletterRegistration() {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(response => response.json())
-    .then(data => console.log(data.email))
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      return response.json().then(data => {
+        throw new Error( data.message || 'Something went wrong');
+      })
+    })
+    .then(data =>   {notificationCts.showNotification({
+      title: 'Success',
+      message: 'Successfuly registred for newsletter',
+      status : 'success'
+    })})
+    .catch(error => {
+        notificationCts.showNotification({
+          title: 'Regestring Failed!',
+          message: error.message || 'Something went wrong',
+          status : 'error'
+        })
+    })
 
 
     // fetch user input (state or refs)
