@@ -62,10 +62,9 @@ async function handler(req, res) {
             return;
         }
         
+        client.close();
         res.status(201).json({message : comments})
     }
-
-    client.close();
 }
 
 export default handler;
